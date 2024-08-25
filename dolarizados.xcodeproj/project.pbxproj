@@ -71,6 +71,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		63203B612C7BAD8E0059A873 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		63627EB72C7AE32A002D8B77 = {
 			isa = PBXGroup;
 			children = (
@@ -94,6 +101,7 @@
 		63627EC22C7AE32A002D8B77 /* dolarizados */ = {
 			isa = PBXGroup;
 			children = (
+				63203B612C7BAD8E0059A873 /* View */,
 				63627EC32C7AE32A002D8B77 /* dolarizadosApp.swift */,
 				63627EC52C7AE32A002D8B77 /* ContentView.swift */,
 				63627EC72C7AE32B002D8B77 /* Assets.xcassets */,

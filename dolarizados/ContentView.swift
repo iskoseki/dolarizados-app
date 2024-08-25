@@ -11,6 +11,8 @@ var apiUrl: String = "https://dolarapi.com/v1/dolares";
 
 struct ContentView: View {
     @State private var dolarData: [DolarInfo] = []
+    @State private var refreshCounter = 0 // Variable para controlar la actualización
+
     
     var body: some View {
         ZStack {
@@ -26,14 +28,16 @@ struct ContentView: View {
                         .font(.largeTitle)
                         .fontWeight(.light)
                     Button {
-                        print("Taped")
+                        print("Refresh data")
+                        refreshCounter += 1
                     } label: {
                         Image(systemName: "arrow.clockwise")
                             .foregroundColor(Color.black)
-                        
                     }
                     .padding()
+                    
                 }
+                
                 
                 
                 ForEach(dolarData.filter { info in
@@ -48,40 +52,50 @@ struct ContentView: View {
                         HeadCardView(Title: info.nombre, BuyPrice: String(info.compra), SellPrice: String(info.venta))
                     }
                 }
+            
                 Spacer()
-                VStack(alignment: .leading) {
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], alignment: .center, spacing: 0) {
-                        ForEach(dolarData, id: \.casa) { info in
-                            DolarCardView(title: info.nombre, BuyPrice: "$\(info.compra)", SellPrice: "$\(info.venta)")
-                        }
+
+                ScrollView {
+                    VStack{
+                        Text("Diferentes cotizaciones 👇")
+                            .font(.title2)
+                            .fontWeight(.thin)
+                            .foregroundColor(Color.white)
                     }
+                           LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                               ForEach(dolarData, id: \.casa) { info in
+                                   DolarCardView(title: info.nombre, BuyPrice: "$\(info.compra)", SellPrice: "$\(info.venta)")
+                               }
+                           }
+                         
                 }
-          
-
-                
-               
-               
-
-                      Spacer()
+                Spacer()
                 Button(action: {
-                    print("gola")
+                    print("Convertidor")
                 }, label: {
-                    VStack {
+                    VStack(alignment: .center) {
                         HStack(alignment: .center) {
                             Text("Convertidor")
                                 .font(.title)
                                 .fontWeight(.regular)
-                            .foregroundColor(Color.white)
+                                .foregroundColor(Color.black)
+                            
                             Image(systemName: "repeat" )
                                 .aspectRatio(contentMode: .fill)
-                                .foregroundColor(Color.white)
+                                .foregroundColor(Color.black)
                         }
-                        VStack{
+                        .padding(.top)
+                        VStack(alignment: .center){
                             Text("Convierte cualquier valor a pesos")
                                 .fontWeight(.ultraLight)
                                 .foregroundColor(Color.black)
                         }
                     }
+                    .frame(maxWidth: .infinity)
+                  
+                    .background()
+                 
+                   
                     
                       
                         
@@ -91,6 +105,9 @@ struct ContentView: View {
             }
 
 
+        }
+        .refreshable {
+            fetchData()
         }
         .onAppear {
                    fetchData()
@@ -156,10 +173,14 @@ struct DolarCardView: View {
     
     var body: some View{
         VStack(alignment: .center){
-            Text(title)
-                .font(.title3)
-                .fontWeight(.light)
-                .foregroundColor(Color.white)
+            HStack(alignment: .center) {
+                HStack(alignment: .center) {
+                    Text(title)
+                        .font(.title2)
+                        .fontWeight(.light)
+                    .foregroundColor(Color.white)
+                }
+            }
             HStack(alignment: .center) {
                
                 VStack(alignment: .leading) {
@@ -167,6 +188,7 @@ struct DolarCardView: View {
                         .font(.headline)
                         .fontWeight(.light)
                         .multilineTextAlignment(.leading)
+                        .opacity(0.7)
                     Text(BuyPrice)
                         .font(.subheadline)
                         .fontWeight(.heavy)
@@ -178,6 +200,7 @@ struct DolarCardView: View {
                         .font(.headline)
                         .fontWeight(.light)
                         .foregroundColor(Color.black)
+                        .opacity(0.7)
                     Text(SellPrice)
                         .font(.subheadline)
                         .fontWeight(.heavy)
@@ -186,7 +209,8 @@ struct DolarCardView: View {
           
             }
         }
-        .padding()
+        
+        
        
     }
 }
@@ -214,6 +238,7 @@ struct HeadCardView: View {
                             .font(.headline)
                             .fontWeight(.light)
                             .multilineTextAlignment(.leading)
+                            .opacity(0.7)
                         Text("$\(BuyPrice)")
                             .font(.title2)
                             .fontWeight(.heavy)
@@ -225,6 +250,7 @@ struct HeadCardView: View {
                             .font(.headline)
                             .fontWeight(.light)
                             .foregroundColor(Color.black)
+                            .opacity(0.7)
                         Text("$\(SellPrice)")
                             .font(.title2)
                             .fontWeight(.heavy)
